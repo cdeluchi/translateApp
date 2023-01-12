@@ -5,6 +5,7 @@ import { useState } from "react";
 import Router from "next/router";
 import { createUseStyles } from "react-jss";
 import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,7 @@ export default function Home() {
     }
   };
 
-  const { t, i18n } = useTranslation("text");
+  const { t, i18n } = useTranslation("common");
 
   return (
     <>
@@ -31,6 +32,15 @@ export default function Home() {
       <div onClick={checkIfOpenModal}>
         <LanguageSwitcher isOpen={isModalOpen} content={t("text.translate")} />
       </div>
+      <div>{t("translate")}</div>
     </>
   );
+}
+
+export async function getStaticProps({ locale }: any) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  };
 }
